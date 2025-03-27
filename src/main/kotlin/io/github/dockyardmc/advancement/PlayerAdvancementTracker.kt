@@ -17,6 +17,8 @@ class PlayerAdvancementTracker(val player: Player) : Disposable {
     private val visibleAdvancements = mutableSetOf<String>()
     private val updatedProgress = mutableMapOf<String, MutableSet<String>>()
 
+    var selectedTab: String? = null
+
     init {
         var listener: EventListener<Event>? = null
 

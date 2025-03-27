@@ -12,12 +12,12 @@ object AdvancementManager {
     fun createAdvancementTracker(player: Player): PlayerAdvancementTracker {
         val tracker = PlayerAdvancementTracker(player)
 
-        synchronized(innerAdvancements) {
-            innerAdvancements.forEach(tracker::onAdvancementAdded)
-        }
-
         synchronized(innerTrackers) {
             innerTrackers.add(tracker)
+        }
+
+        synchronized(innerAdvancements) {
+            innerAdvancements.forEach(tracker::onAdvancementAdded)
         }
 
         return tracker

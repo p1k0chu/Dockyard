@@ -13,7 +13,7 @@ import kotlinx.datetime.Clock
 import kotlin.random.Random
 
 /**
- * Creates a completed advancements and deletes immediately,
+ * Creates a completed advancement and deletes immediately,
  * resulting in an advancement toast
  */
 fun Player.showToast(
