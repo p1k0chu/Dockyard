@@ -1,37 +1,36 @@
 package io.github.dockyardmc.advancement
 
 import io.github.dockyardmc.player.Player
-import io.github.dockyardmc.utils.debug
 
 object AdvancementManager {
-    val trackers = mutableListOf<PlayerAdvancementTracker>()
-    val advancements = mutableMapOf<String, Advancement>()
+    private val innerTrackers = mutableListOf<PlayerAdvancementTracker>()
+    private val innerAdvancements = mutableMapOf<String, Advancement>()
+
+    val trackers get() = synchronized(innerTrackers) { innerTrackers.toList() }
+    val advancements get() = synchronized(innerAdvancements) { innerAdvancements.toMap() }
 
     fun createAdvancementTracker(player: Player): PlayerAdvancementTracker {
         val tracker = PlayerAdvancementTracker(player)
 
-        synchronized(advancements) {
-            advancements.forEach { id, adv ->
-                tracker.progress[id] = AdvancementProgress.fromAdvancement(adv)
-            }
+        synchronized(innerAdvancements) {
+            innerAdvancements.forEach(tracker::onAdvancementAdded)
         }
 
-        synchronized(trackers) {
-            trackers.add(tracker)
+        synchronized(innerTrackers) {
+            innerTrackers.add(tracker)
         }
 
         return tracker
     }
 
     fun addAdvancement(id: String, adv: Advancement) {
-        synchronized(advancements) {
-            advancements[id] = adv
-            debug("$advancements")
+        synchronized(innerAdvancements) {
+            innerAdvancements[id] = adv
         }
 
-        synchronized(trackers) {
-            trackers.forEach {
-                it.onNewAdvancement(id, adv)
+        synchronized(innerTrackers) {
+            innerTrackers.forEach {
+                it.onAdvancementAdded(id, adv)
             }
         }
     }
