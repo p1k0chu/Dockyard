@@ -1,5 +1,6 @@
 package io.github.dockyardmc.advancement
 
+import io.github.dockyardmc.apis.advancement.AdvancementEntry
 import io.github.dockyardmc.player.Player
 
 object AdvancementManager {
@@ -29,7 +30,7 @@ object AdvancementManager {
         }
     }
 
-    fun addAdvancement(id: String, adv: Advancement) {
+    fun addAdvancement(id: String, adv: Advancement): AdvancementEntry {
         synchronized(innerAdvancements) {
             innerAdvancements[id] = adv
         }
@@ -39,6 +40,8 @@ object AdvancementManager {
                 it.onAdvancementAdded(id, adv)
             }
         }
+
+        return AdvancementEntry(id, adv)
     }
 
     fun removeAdvancement(id: String) {
@@ -50,4 +53,7 @@ object AdvancementManager {
             innerTrackers.forEach { it.onAdvancementRemoved(id) }
         }
     }
+
+    fun addAdvancement(adv: AdvancementEntry) = addAdvancement(adv.id, adv.advancement)
+    fun removeAdvancement(adv: AdvancementEntry) = removeAdvancement(adv.id)
 }

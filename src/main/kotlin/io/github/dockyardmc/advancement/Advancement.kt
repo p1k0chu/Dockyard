@@ -21,5 +21,14 @@ data class Advancement(
 
         buffer.writeBoolean(false) // thats 'Sends telemerty' field
     }
+
+    companion object {
+        fun build(builder: AdvancementBuilder.() -> Unit): Advancement {
+            val b = AdvancementBuilder()
+            builder.invoke(b)
+
+            return b.build()
+        }
+    }
 }
 

@@ -42,10 +42,12 @@ class PlayerAdvancementTracker(val player: Player) : Disposable {
     }
 
     private fun setProgress(advId: String, criterion: String, timestamp: Long?) {
-        val adv = progress[advId] ?: return
-        if (adv[criterion] == timestamp) return
+        synchronized(this.progress) {
+            val adv = progress[advId] ?: return
+            if (adv[criterion] == timestamp) return
 
-        adv[criterion] = timestamp
+            adv[criterion] = timestamp
+        }
 
         synchronized(updatedProgress) {
             updatedProgress.getOrPut(advId) {
@@ -96,7 +98,7 @@ class PlayerAdvancementTracker(val player: Player) : Disposable {
             }
         }
 
-        if(add.isEmpty() && remove.isEmpty() && progress.isEmpty())
+        if (add.isEmpty() && remove.isEmpty() && progress.isEmpty())
             return@run
 
         player.sendPacket(
