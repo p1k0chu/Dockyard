@@ -88,14 +88,16 @@ open class AdvancementTreeNode(
      * Returns you a list of all advancements as [AdvancementEntry]
      */
     fun buildTree(): MutableList<AdvancementEntry> {
+        if(this.advancement.parentId == null) {
+            this.advancement.parentId = parent?.id
+        }
+
         val result = mutableListOf<AdvancementEntry>()
 
         result.add(
             AdvancementEntry(
                 this.id,
-                this.advancement.apply {
-                    if(parentId == null) parentId = parent?.id
-                }.build()
+                this.advancement.build()
             )
         )
 
@@ -105,4 +107,34 @@ open class AdvancementTreeNode(
 
         return result
     }
+}
+
+class AdvancementTreeNodeBuilder {
+    var id: String = "" // dont leave it empty for the love of god
+    val advancementBuilder = AdvancementBuilder()
+    var parent: AdvancementTreeNode? = null
+
+    fun withAdvancement(builder: AdvancementBuilder.() -> Unit) {
+        builder.invoke(advancementBuilder)
+    }
+
+    fun withId(id: String) {
+        this.id = id
+    }
+
+    fun withParent(parent: AdvancementTreeNode) {
+        this.parent = parent
+    }
+
+    fun build(): AdvancementTreeNode {
+        val node = AdvancementTreeNode(id, advancementBuilder)
+        return node
+    }
+}
+
+fun node(id: String, builder: AdvancementTreeNodeBuilder.() -> Unit): AdvancementTreeNode {
+    val nodeBuilder = AdvancementTreeNodeBuilder()
+    nodeBuilder.id = id
+    builder.invoke(nodeBuilder)
+    return nodeBuilder.build()
 }
