@@ -25,7 +25,7 @@ kotlin {
 }
 
 application {
-    mainClass.set("io.github.dockyard.MainKt")
+    mainClass.set("io.github.dockyardmc.MainKt")
 }
 
 repositories {
