@@ -74,7 +74,7 @@ object ClientPacketRegistry : PacketRegistry() {
         skipPlay("Disguised chat packet")
         addPlay(ClientboundEntityEventPacket::class)
         addPlay(ClientboundEntityPositionSyncPacket::class)
-        skipPlay("Explosion")
+        addPlay(ClientboundExplosionPacket::class)
         addPlay(ClientboundUnloadChunkPacket::class)
         addPlay(ClientboundGameEventPacket::class)
         skipPlay("open horse inventory")
